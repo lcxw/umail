@@ -1,0 +1,33 @@
+* 11 FETCH (ENVELOPE
+(
+"Mon, 25 Mar 2019 17:11:42 +0800 (CST)"
+"=?utf-8?B?6buE55m76L6J77yM5LiJ55ub6ZuG5Zui5Y2O5Lic5Yy65Z+fMjAxOeiQpemUgOeyvuiLseagoeWbreaLm+iBmOKAlOKAlOeMjuiBmOagoeWbrQ==?="
+(("=?utf-8?B?54yO6IGY5qCh5Zut?=" NIL "service" "mail4.lietou-edm.com"))
+(("=?utf-8?B?54yO6IGY5qCh5Zut?=" NIL "service" "mail4.lietou-edm.com"))
+(("=?utf-8?B?54yO6IGY5qCh5Zut?=" NIL "service" "mail4.lietou-edm.com"))
+((NIL NIL "17370842180" "189.cn"))
+NIL
+NIL
+NIL
+"<396677057.100352471.1553505102554.JavaMail.javamailuser@localhost>")
+INTERNALDATE
+"25-Mar-2019 09:11:43 +0000"
+RFC822.SIZE
+11023
+)
+
+date = mailDateFormat.parse(s);
+subject = r.readString();
+from = parseAddressList(r);
+sender = parseAddressList(r);
+replyTo = parseAddressList(r);
+to = parseAddressList(r);
+cc = parseAddressList(r);
+bcc = parseAddressList(r);
+inReplyTo = r.readString();
+messageId = r.readString();
+
+
+* 11 FETCH (ENVELOPE (时间 主题 （encodedPersonal mb host）
+
+

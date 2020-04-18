@@ -1,0 +1,20 @@
+POP3： 默认端口为：110 （如勾选ssl安全链接，端口号为995）
+SMTP： 默认端口为：25 （如勾选ssl安全链接，端口号为465）
+IMAP： 默认端口为：143 （如勾选ssl安全链接，端口号为993）
+
+常用邮箱：
+mail.qq.com QQ邮箱
+mail.163.com 网易163邮箱
+mail.126.com 网易126邮箱
+mail.sina.com.cn 新浪邮箱
+mail.sohu.com 搜狐邮箱
+mail.yahoo.com 雅虎邮箱
+outlook.com outlook邮箱
+gmail.google.com gmail邮箱
+outlook.live.com Hotmail邮箱
+mail.139.com 移动139邮箱
+mail.wo.com.cn 联通沃邮箱
+mail.189.cn 电信189邮箱
+
+
+

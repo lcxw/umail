@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.edu.mail.api.dao.AccountSignDao" >
+  <resultMap id="BaseResultMap" type="org.edu.mail.api.domain.AccountSign" >
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="sendsign" property="sendsign" jdbcType="VARCHAR" />
+    <result column="replysign" property="replysign" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectByAccountName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select account,sendsign,replysign
+    from account_sign
+    where account = #{account,jdbcType=VARCHAR}
+  </select>
+
+  <update id="update" parameterType="org.edu.mail.api.domain.AccountSign">
+    update account_sign
+    <trim prefix="set" suffixOverrides=",">
+      <if test="sendsign != null" >
+        sendsign= #{sendsign,jdbcType=VARCHAR},
+      </if>
+      <if test="replysign != null" >
+        replysign = #{replysign,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    where account = #{account};
+  </update>
+
+  <insert id="insert" parameterType="org.edu.mail.api.domain.AccountSign" >
+    insert into account_sign (account, sendsign, replysign
+      )
+    values (#{account,jdbcType=VARCHAR}, #{sendsign,jdbcType=VARCHAR}, #{replysign,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="org.edu.mail.api.domain.AccountSign" >
+    insert into account_sign
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="sendsign != null" >
+        sendsign,
+      </if>
+      <if test="replysign != null" >
+        replysign,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="sendsign != null" >
+        #{sendsign,jdbcType=VARCHAR},
+      </if>
+      <if test="replysign != null" >
+        #{replysign,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!--是否存在-->
+  <select id="isExist" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select account,sendsign,replysign
+    from account_sign
+    where account = #{account,jdbcType=VARCHAR}
+  </select>
+</mapper>

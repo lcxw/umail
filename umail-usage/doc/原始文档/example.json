@@ -1,0 +1,8 @@
+{
+  "msg": {"content":"<html><head><meta charset=\"UTF-8\">\n</head></head>\n<body><table border=\"1\">\n<tr>\n<td>row 1, cell 1</td>\n<td>row 1, cell 2</td>\n</tr>\n<tr>\n<td>row 2, cell 1</td>\n<td>row 2, cell 2</td>\n</tr>\n</table></body>\n</html>","from":"qq邮箱<1337078409@qq.com>","replayTo":["qq邮箱<1337078409@qq.com>"],"subject":"JavaMail测试定时发送邮件","to":["189邮箱<17370842180@189.cn>"],"type":"html"},
+  "way":"1",
+  "date":"Sun Mar 03 2019 16:48:22 GMT+0800",
+  "secret":"1234"
+}
+
+

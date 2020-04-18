@@ -1,0 +1,3 @@
+- umail-usage: 邮件收发系统对JavaMail的二次封装
+- umail-api: springboot开发的邮件收发系统后台
+- umail-web: vue+element开发的邮件收发系统web端

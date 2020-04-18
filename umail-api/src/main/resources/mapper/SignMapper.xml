@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.edu.mail.api.dao.SignDao" >
+  <resultMap id="BaseResultMap" type="org.edu.mail.api.domain.Sign" >
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="userId" property="userid" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select name,content,userId
+    from sign
+    where userId = #{uid,jdbcType=VARCHAR}
+  </select>
+  <update id="update" parameterType="org.edu.mail.api.domain.Sign">
+    update sign
+    <trim prefix="set" suffixOverrides=",">
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content= #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        userId = #{userid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    where name = #{name};
+  </update>
+  <insert id="insert" parameterType="org.edu.mail.api.domain.Sign" >
+    insert into sign (name, content, userId
+      )
+    values (#{name,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from sign where name = #{name,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insertSelective" parameterType="org.edu.mail.api.domain.Sign" >
+    insert into sign
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="userid != null" >
+        userId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <!--是否存在-->
+  <select id="isExist" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select name,content,userId
+    from sign
+    where name = #{name,jdbcType=VARCHAR}
+  </select>
+
+  <!--是否存在-->
+  <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select name,content,userId
+    from sign
+    where name = #{name,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

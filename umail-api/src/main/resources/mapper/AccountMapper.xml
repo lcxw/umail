@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.edu.mail.api.dao.AccountDao" >
+  <resultMap id="BaseResultMap" type="org.edu.mail.api.domain.Account" >
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="recProtocol" property="recprotocol" jdbcType="VARCHAR" />
+    <result column="recHost" property="rechost" jdbcType="VARCHAR" />
+    <result column="recPort" property="recport" jdbcType="VARCHAR" />
+    <result column="recIsSSL" property="recisssl" jdbcType="VARCHAR" />
+    <result column="sendProtocol" property="sendprotocol" jdbcType="VARCHAR" />
+    <result column="sendHost" property="sendhost" jdbcType="VARCHAR" />
+    <result column="sendPort" property="sendport" jdbcType="VARCHAR" />
+    <result column="sendIsSSL" property="sendisssl" jdbcType="VARCHAR" />
+    <result column="alias" property="alias" jdbcType="VARCHAR" />
+    <result column="isScheduled" property="isscheduled" jdbcType="VARCHAR" />
+    <result column="scheduledPeriod" property="scheduledperiod" jdbcType="VARCHAR" />
+    <result column="userId" property="userid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    account, password, recProtocol,
+      recHost, recPort, recIsSSL,
+      sendProtocol, sendHost, sendPort,
+      sendIsSSL, alias, isScheduled, scheduledPeriod, userId
+  </sql>
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from account where account = #{account,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="org.edu.mail.api.domain.Account" >
+    insert into account (account, password, recProtocol, 
+      recHost, recPort, recIsSSL, 
+      sendProtocol, sendHost, sendPort, 
+      sendIsSSL, alias, isScheduled, scheduledPeriod, userId)
+    values (#{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{recprotocol,jdbcType=VARCHAR}, 
+      #{rechost,jdbcType=VARCHAR}, #{recport,jdbcType=VARCHAR}, #{recisssl,jdbcType=VARCHAR}, 
+      #{sendprotocol,jdbcType=VARCHAR}, #{sendhost,jdbcType=VARCHAR}, #{sendport,jdbcType=VARCHAR}, 
+      #{sendisssl,jdbcType=VARCHAR}, #{alias,jdbcType=VARCHAR}, #{isscheduled,jdbcType=VARCHAR},
+      #{scheduledperiod,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="update" parameterType="org.edu.mail.api.domain.Account">
+    update account
+    <trim prefix="set" suffixOverrides=",">
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="recprotocol != null" >
+        recProtocol = #{recprotocol,jdbcType=VARCHAR},
+      </if>
+      <if test="rechost != null" >
+        recHost = #{rechost,jdbcType=VARCHAR},
+      </if>
+      <if test="recport != null" >
+        recPort = #{recport,jdbcType=VARCHAR},
+      </if>
+      <if test="recisssl != null" >
+        recIsSSL = #{recisssl,jdbcType=VARCHAR},
+      </if>
+      <if test="sendprotocol != null" >
+        sendProtocol = #{sendprotocol,jdbcType=VARCHAR},
+      </if>
+      <if test="sendhost != null" >
+        sendHost = #{sendhost,jdbcType=VARCHAR},
+      </if>
+      <if test="sendport != null" >
+        sendPort = #{sendport,jdbcType=VARCHAR},
+      </if>
+      <if test="sendisssl != null" >
+        sendIsSSL = #{sendisssl,jdbcType=VARCHAR},
+      </if>
+      <if test="alias != null" >
+        alias = #{alias,jdbcType=VARCHAR},
+      </if>
+      <if test="isscheduled != null" >
+        isScheduled = #{isscheduled,jdbcType=VARCHAR},
+      </if>
+      <if test="scheduledperiod != null" >
+        scheduledPeriod = #{scheduledperiod,jdbcType=VARCHAR},
+      </if>
+  </trim>
+    where account =#{account};
+  </update>
+
+  <insert id="insertSelective" parameterType="org.edu.mail.api.domain.Account" >
+    insert into account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="recprotocol != null" >
+        recProtocol,
+      </if>
+      <if test="rechost != null" >
+        recHost,
+      </if>
+      <if test="recport != null" >
+        recPort,
+      </if>
+      <if test="recisssl != null" >
+        recIsSSL,
+      </if>
+      <if test="sendprotocol != null" >
+        sendProtocol,
+      </if>
+      <if test="sendhost != null" >
+        sendHost,
+      </if>
+      <if test="sendport != null" >
+        sendPort,
+      </if>
+      <if test="sendisssl != null" >
+        sendIsSSL,
+      </if>
+      <if test="userid != null" >
+        userId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="recprotocol != null" >
+        #{recprotocol,jdbcType=VARCHAR},
+      </if>
+      <if test="rechost != null" >
+        #{rechost,jdbcType=VARCHAR},
+      </if>
+      <if test="recport != null" >
+        #{recport,jdbcType=VARCHAR},
+      </if>
+      <if test="recisssl != null" >
+        #{recisssl,jdbcType=VARCHAR},
+      </if>
+      <if test="sendprotocol != null" >
+        #{sendprotocol,jdbcType=VARCHAR},
+      </if>
+      <if test="sendhost != null" >
+        #{sendhost,jdbcType=VARCHAR},
+      </if>
+      <if test="sendport != null" >
+        #{sendport,jdbcType=VARCHAR},
+      </if>
+      <if test="sendisssl != null" >
+        #{sendisssl,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from account
+    where userId = #{uid,jdbcType=VARCHAR}
+  </select>
+
+  <!--是否存在-->
+  <select id="isExist" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from account
+    where account = #{account,jdbcType=VARCHAR}
+  </select>
+  <!--and userId = #{userid,jdbcType=VARCHAR}-->
+</mapper>
