@@ -14,20 +14,20 @@ buildscript {
 //        classpath "gradle.plugin.org.ec4j.gradle:editorconfig-gradle-plugin:0.0.3"
 //    }
 }
-plugins {
-//    id "org.jetbrains.kotlin.jvm" apply false // https://youtrack.jetbrains.com/issue/KT-30276
-    id "io.spring.nohttp" version "0.0.3.RELEASE"
-//    id "org.ec4j.editorconfig" version "0.0.3"
-}
+//plugins {
+    id "org.jetbrains.kotlin.jvm" apply false // https://youtrack.jetbrains.com/issue/KT-30276
+//    id "io.spring.nohttp" version "0.0.3.RELEASE"
+    id "org.ec4j.editorconfig" version "0.0.3"
+//}
 
 description = "Spring Boot Build"
 version = "0.0.1"
 defaultTasks 'build'
 
-nohttp {
-    whitelistFile = project.file("src/nohttp/whitelist.lines")
-    source.exclude "buildSrc/build/**"
-}
+//nohttp {
+//    whitelistFile = project.file("src/nohttp/whitelist.lines")
+//    source.exclude "buildSrc/build/**"
+//}
 
 allprojects {
     group "org.springframework.boot"

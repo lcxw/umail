@@ -31,12 +31,12 @@ tasks.withType(Javadoc) {
 //    }
 //}
 // 打包资源
-processResources {
-    from('src/main/java') {
-        include '**/*.*'
-        include '**/*.*'
-    }
-}
+//processResources {
+//    from('src/main/java') {
+//        include '**/*.*'
+//        include '**/*.*'
+//    }
+//}
 dependencies {
     // 测试
     compile 'junit:junit:4.12'
