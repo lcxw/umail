@@ -1,16 +1,16 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '1.2.3'
+//    id 'com.github.johnrengelman.shadow' version '1.2.3'
 }
 
 group 'org.edu.mail'
-version '1.0'
-
+version '1.1.2'
+//project.name = 'umail-usage'
 sourceCompatibility = 1.8
 
 
 repositories {
-    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+    maven { url "https://maven.aliyun.com/nexus/content/groups/public/" }
 }
 // 设置utf-8编码，解决问题“编码 GBK 的不可映射字符“
 tasks.withType(JavaCompile) {
@@ -22,14 +22,14 @@ tasks.withType(Javadoc) {
     options.charSet = "UTF-8"
 }
 // 创建src中java和resources目录
-task "create-dirs" << {
-    sourceSets*.java.srcDirs*.each{
-        it.mkdirs()
-    }
-    sourceSets*.resources.srcDirs*.each{
-        it.mkdirs()
-    }
-}
+//task "create-dirs" << {
+//    sourceSets*.java.srcDirs*.each{
+//        it.mkdirs()
+//    }
+//    sourceSets*.resources.srcDirs*.each{
+//        it.mkdirs()
+//    }
+//}
 // 打包资源
 processResources {
     from('src/main/java') {
@@ -62,7 +62,7 @@ dependencies {
     // 参考: http://www.quartz-scheduler.org/documentation/quartz-2.2.x/quick-start.html#quartz-quick-start-guide
     compile 'org.quartz-scheduler:quartz:2.3.0'
     // slf4j 和 log4j合用日志文件
-    compile 'org.slf4j:slf4j-log4j12:1.7.10'
+//    compile 'org.slf4j:slf4j-log4j12:1.7.10'
 
     // 加密解密
     compile 'commons-codec:commons-codec:1.10'

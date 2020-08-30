@@ -353,10 +353,11 @@
 				});
 			},
 			readMessages(){
+			  // debugger;
 				var _this = this;
 				_this.$axios({
 				  method: 'get',
-				  url: localStorage.getItem('base_url')+'/read?account='+_this.currentAccount+'&box='+_this.messages[_this.currentMessageNum].box+'&msgUid='+_this.messages[_this.currentMessageNum].uid,
+				  url: localStorage.getItem('base_url')+'/read?account='+_this.currentAccount+'&box='+_this.currentBox+'&msgUid='+_this.messages[_this.currentMessageNum].uid,
 				  headers:{'Content-Type': 'application/json','token':localStorage.token}
 				}).then(function(res) {
 					console.log(res.data)
