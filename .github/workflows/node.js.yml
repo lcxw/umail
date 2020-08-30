@@ -27,7 +27,8 @@ jobs:
       - name: Install dependencies
         run: yarn --frozen-lockfile --cwd umail-web
       - name: build package
-        run: yarn build --frozen-lockfile --cwd umail-web
+        - run: cd umail-web
+        - run: yarn build
       - uses: actions/upload-artifact@v2
         with:
           name: Package
