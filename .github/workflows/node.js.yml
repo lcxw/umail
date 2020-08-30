@@ -29,6 +29,6 @@ jobs:
       - name: build package
         run: yarn build --frozen-lockfile --cwd umail-web
       - uses: actions/upload-artifact@v2
-          with:
-            name: Package
-            path: umail-web/dist/
+        with:
+          name: Package
+          path: umail-web/dist/
