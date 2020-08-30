@@ -16,7 +16,7 @@ jobs:
 #        with:
 #          wrapper-directory: path/to/wrapper-directory
       - uses: eskatos/gradle-command-action@v1
-        - with:
+        with:
             arguments: build
       - uses: example/action-that-comments-on-the-pr@v0
         if: failure()
