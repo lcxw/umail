@@ -7,7 +7,7 @@ on:
   push:
     branches: [ master, develop ]
   pull_request:
-    branches: [ ubuntu-latest]
+    branches: [ master, develop]
 
 jobs:
   build:
@@ -26,12 +26,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: yarn --frozen-lockfile --cwd umail-web
-#       - run: cd umail-web && npm ci
-#       - run: cd umail-web && npm run build --if-present
-#       - run: cd umail-web && npm test
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      - run: cd umail-web
-      - run: cd umail-web && npm ci
-      - run: cd umail-web && npm run build --if-present
-      - run: cd umail-web && npm test
+      - name: build package
+        run: yarn build --frozen-lockfile --cwd umail-web
+      - uses: actions/upload-artifact@v2
+          with:
+            name: Package
+            path: build/libs
