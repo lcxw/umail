@@ -15,9 +15,9 @@ buildscript {
 //    }
 }
 //plugins {
-    id "org.jetbrains.kotlin.jvm" apply false // https://youtrack.jetbrains.com/issue/KT-30276
+//    id "org.jetbrains.kotlin.jvm" apply false // https://youtrack.jetbrains.com/issue/KT-30276
 //    id "io.spring.nohttp" version "0.0.3.RELEASE"
-    id "org.ec4j.editorconfig" version "0.0.3"
+//    id "org.ec4j.editorconfig" version "0.0.3"
 //}
 
 description = "Spring Boot Build"
