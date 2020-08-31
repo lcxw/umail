@@ -34,7 +34,7 @@ public class SearchController {
             @ApiImplicitParam(name = "queryKey", value = "查询关键词", required = true, dataType = "String")
     })
     @RequestMapping(value = "/search0", method = RequestMethod.GET)
-    public ResponseEntity<?> searchMsgByAddress(HttpServletRequest request,
+    public ResponseEntity<ResponseResult> searchMsgByAddress(HttpServletRequest request,
                                                 @RequestParam String account,
                                                 @RequestParam String origin,
                                                 @RequestParam String queryKey) {
@@ -76,7 +76,7 @@ public class SearchController {
             @ApiImplicitParam(name = "queryKey", value = "查询关键词", required = true, dataType = "String")
     })
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public ResponseEntity<?> search(HttpServletRequest request,
+    public ResponseEntity<ResponseResult> search(HttpServletRequest request,
                                     @RequestParam String account,
                                     @RequestParam String queryKey) {
         ResponseResult result = new ResponseResult();

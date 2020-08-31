@@ -53,7 +53,7 @@ public class MessageController extends UMailConfigure{
             @ApiImplicitParam(name = "box", value = "邮箱目录名", required = true, dataType = "String")
     })
     @RequestMapping(value = "/messages", method = RequestMethod.GET)
-    public ResponseEntity<?> getMessages(HttpServletRequest request, @RequestParam String account, @RequestParam String box) {
+    public ResponseEntity<ResponseResult> getMessages(HttpServletRequest request, @RequestParam String account, @RequestParam String box) {
         logger.info("path:"+"/message");
         logger.info("args:"+account);
         logger.info("args:"+box);
@@ -85,7 +85,7 @@ public class MessageController extends UMailConfigure{
             @ApiImplicitParam(name = "msgUid", value = "邮件的Uid", required = true, dataType = "String")
     })
     @RequestMapping(value = "/read", method = RequestMethod.GET)
-    public ResponseEntity<?> readMessage(HttpServletRequest request, @RequestParam String account,
+    public ResponseEntity<ResponseResult> readMessage(HttpServletRequest request, @RequestParam String account,
             @RequestParam String box,
             @RequestParam String msgUid) {
         ResponseResult result = new ResponseResult();
@@ -112,7 +112,7 @@ public class MessageController extends UMailConfigure{
     @ApiOperation(value="保存邮件", notes="对邮件保存，可下次编辑")
     @ApiImplicitParam(name = "raw", value = "邮件原始json字符串", required = true, dataType = "String")
     @RequestMapping(value = "/draft", method = RequestMethod.POST)
-    public ResponseEntity<?> saveMessageToDraft(HttpServletRequest request, @RequestBody String raw) {
+    public ResponseEntity<ResponseResult> saveMessageToDraft(HttpServletRequest request, @RequestBody String raw) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");
@@ -142,7 +142,7 @@ public class MessageController extends UMailConfigure{
     @ApiOperation(value="发送邮件", notes="发送邮件")
     @ApiImplicitParam(name = "raw", value = "邮件原始json字符串", required = true, dataType = "String")
     @RequestMapping(value = "/send", method = RequestMethod.POST)
-    public ResponseEntity<?> sendMessages(HttpServletRequest request, @RequestBody String raw) {
+    public ResponseEntity<ResponseResult> sendMessages(HttpServletRequest request, @RequestBody String raw) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");
@@ -180,7 +180,7 @@ public class MessageController extends UMailConfigure{
     @ApiOperation(value="同步邮件", notes="对指定邮箱账号进行同步")
     @ApiImplicitParam(name = "account", value = "邮箱账号名", required = true, dataType = "String")
     @RequestMapping(value = "/sync", method = RequestMethod.GET)
-    public ResponseEntity<?> syncMessages(HttpServletRequest request, @RequestParam String account) {
+    public ResponseEntity<ResponseResult> syncMessages(HttpServletRequest request, @RequestParam String account) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");
@@ -292,7 +292,7 @@ public class MessageController extends UMailConfigure{
 
     @ApiOperation(value="上传附件", notes="上传附件到uid所在目录中")
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public ResponseEntity<?> uploadAttach(HttpServletRequest request) {
+    public ResponseEntity<ResponseResult> uploadAttach(HttpServletRequest request) {
         ResponseResult result = new ResponseResult();
         try {
             List list = new ArrayList();
@@ -322,7 +322,7 @@ public class MessageController extends UMailConfigure{
             @ApiImplicitParam(name = "type", value = "邮件格式html或plain", required = true, dataType = "String")
     })
     @RequestMapping(value = "/reply", method = RequestMethod.GET)
-    public ResponseEntity<?> reply(HttpServletRequest request, @RequestParam String account,
+    public ResponseEntity<ResponseResult> reply(HttpServletRequest request, @RequestParam String account,
                                    @RequestParam String box,
                                    @RequestParam String msgUid,
                                    @RequestParam String type) {
@@ -355,7 +355,7 @@ public class MessageController extends UMailConfigure{
             @ApiImplicitParam(name = "type", value = "邮件格式html或plain", required = true, dataType = "String")
     })
     @RequestMapping(value = "/replyAll", method = RequestMethod.GET)
-    public ResponseEntity<?> replayAll(HttpServletRequest request, @RequestParam String account,
+    public ResponseEntity<ResponseResult> replayAll(HttpServletRequest request, @RequestParam String account,
                                        @RequestParam String box,
                                        @RequestParam String msgUid,
                                        @RequestParam String type) {
@@ -387,7 +387,7 @@ public class MessageController extends UMailConfigure{
             @ApiImplicitParam(name = "msgUid", value = "邮件的Uid", required = true, dataType = "String")
     })
     @RequestMapping(value = "/forward", method = RequestMethod.GET)
-    public ResponseEntity<?> forward(HttpServletRequest request, @RequestParam String account,
+    public ResponseEntity<ResponseResult> forward(HttpServletRequest request, @RequestParam String account,
                                      @RequestParam String box,
                                      @RequestParam String msgUid) {
         ResponseResult result = new ResponseResult();
@@ -415,7 +415,7 @@ public class MessageController extends UMailConfigure{
     @ApiOperation(value="删除邮件", notes="对指定邮件进行删除")
     @ApiImplicitParam(name = "raw", value = "邮件原始json字符串", required = true, dataType = "String")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteMessage(HttpServletRequest request, @RequestBody String raw) {
+    public ResponseEntity<ResponseResult> deleteMessage(HttpServletRequest request, @RequestBody String raw) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");

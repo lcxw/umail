@@ -32,7 +32,7 @@ public class ContactController {
 
     @ApiOperation(value="获取联系人", notes="根据request头部token中uid获取联系人")
     @RequestMapping(value = "/contacts", method = RequestMethod.GET)
-    public ResponseEntity<?> getContact(HttpServletRequest request) {
+    public ResponseEntity<ResponseResult> getContact(HttpServletRequest request) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");
@@ -49,9 +49,9 @@ public class ContactController {
     }
 
     @ApiOperation(value="操作联系人", notes="对联系人进行增删改")
-    @ApiImplicitParam(name = "contact", value = "联系人对象", required = true, dataType = "Contact")
+    @ApiImplicitParam(name = "contact", value = "联系人对象", required = true, dataType = "Contact",dataTypeClass = Contact.class)
     @RequestMapping(value = "/contacts", method = RequestMethod.POST)
-    public ResponseEntity<?> manageContact(HttpServletRequest request, @RequestBody Contact contact) {
+    public ResponseEntity<ResponseResult> manageContact(HttpServletRequest request, @RequestBody Contact contact) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");

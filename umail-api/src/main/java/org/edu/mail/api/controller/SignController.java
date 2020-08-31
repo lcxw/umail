@@ -43,7 +43,7 @@ public class SignController {
 
     @ApiOperation(value="获取所有签名", notes="根据request头部token中uid获取所有签名")
     @RequestMapping(value = "/signs", method = RequestMethod.GET)
-    public ResponseEntity<?> getAccount(HttpServletRequest request) {
+    public ResponseEntity<ResponseResult> getAccount(HttpServletRequest request) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");
@@ -62,7 +62,7 @@ public class SignController {
     @ApiOperation(value="管理签名", notes="对签名进行增删改")
     @ApiImplicitParam(name = "sign", value = "签名对象", required = true, dataType = "Sign")
     @RequestMapping(value = "/signs", method = RequestMethod.POST)
-    public ResponseEntity<?> manageSign(HttpServletRequest request, @RequestBody Sign sign) {
+    public ResponseEntity<ResponseResult> manageSign(HttpServletRequest request, @RequestBody Sign sign) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");
@@ -135,7 +135,7 @@ public class SignController {
 
     @ApiOperation(value="获取所有账户签名", notes="获取所有账户签名")
     @RequestMapping(value = "/accountSigns", method = RequestMethod.GET)
-    public ResponseEntity<?> getAccountSigns(HttpServletRequest request) {
+    public ResponseEntity<ResponseResult> getAccountSigns(HttpServletRequest request) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");
@@ -164,7 +164,7 @@ public class SignController {
             @ApiImplicitParam(name = "type", value = "签名是html或plain", required = true, dataType = "String")
     })
     @RequestMapping(value = "/accountSign", method = RequestMethod.GET)
-    public ResponseEntity<?> getAccountSign(HttpServletRequest request,
+    public ResponseEntity<ResponseResult> getAccountSign(HttpServletRequest request,
                                             @RequestParam String account,
                                             @RequestParam String way,
                                             @RequestParam String type) {
@@ -195,7 +195,7 @@ public class SignController {
     @ApiOperation(value="更新账户签名", notes="更新账户签名")
     @ApiImplicitParam(name = "raw", value = "账户签名原始JSON字符串", required = true, dataType = "String")
     @RequestMapping(value = "/accountSigns", method = RequestMethod.POST)
-    public ResponseEntity<?> updateAccountSigns(HttpServletRequest request, @RequestBody String raw) {
+    public ResponseEntity<ResponseResult> updateAccountSigns(HttpServletRequest request, @RequestBody String raw) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");

@@ -10,7 +10,7 @@ sourceCompatibility = 1.8
 
 
 repositories {
-    maven { url "https://maven.aliyun.com/nexus/content/groups/public/" }
+    maven { url "https://maven.aliyun.com/repository/public" }
 }
 // 设置utf-8编码，解决问题“编码 GBK 的不可映射字符“
 tasks.withType(JavaCompile) {

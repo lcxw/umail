@@ -35,7 +35,7 @@ public class UserController {
 
     @ApiOperation(value="获取验证码", notes="获取验证码")
     @RequestMapping(value = "/verify", method = RequestMethod.GET)
-    public ResponseEntity<?> sendVerifyMessage(@RequestParam String email) {
+    public ResponseEntity<ResponseResult> sendVerifyMessage(@RequestParam String email) {
         ResponseResult result = new ResponseResult();
         List<User> users = userService.selectAll();
         User user = null;
@@ -98,7 +98,7 @@ public class UserController {
 
     @ApiOperation(value="找回密码", notes="根据验证码找回密码")
     @RequestMapping(value = "/forget", method = RequestMethod.POST)
-    public ResponseEntity<?> forgetPassword(@RequestBody User user) {
+    public ResponseEntity<ResponseResult> forgetPassword(@RequestBody User user) {
         ResponseResult result = new ResponseResult();
         List<User> users = userService.selectAll();
         User oldUser = null;
@@ -139,7 +139,7 @@ public class UserController {
     @ApiOperation(value="添加用户", notes="添加用户")
     @ApiImplicitParam(name = "user", value = "用户对象", required = true, dataType = "User")
     @RequestMapping(value = "/users", method = RequestMethod.POST)
-    public ResponseEntity<?> saveUser(@RequestBody User user) {
+    public ResponseEntity<ResponseResult> saveUser(@RequestBody User user) {
         ResponseResult result = new ResponseResult();
         List<User> users = userService.selectAll();
         boolean exist = false;
@@ -164,7 +164,7 @@ public class UserController {
     @ApiOperation(value="换取token", notes="根据用户的账号密码换取token")
     @ApiImplicitParam(name = "user", value = "用户对象", required = true, dataType = "User")
     @RequestMapping(value = "/token", method = RequestMethod.POST)
-    public ResponseEntity<?> login(@RequestBody User user) {
+    public ResponseEntity<ResponseResult> login(@RequestBody User user) {
         ResponseResult result = new ResponseResult();
         String token = userService.login(user);
         if(token != null){
@@ -180,7 +180,7 @@ public class UserController {
 
     @ApiOperation(value="验证token", notes="验证token是否过期")
     @RequestMapping(value = "/valid", method = RequestMethod.GET)
-    public ResponseEntity<?> valid(HttpServletRequest request) {
+    public ResponseEntity<ResponseResult> valid(HttpServletRequest request) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         if(token == null || token.equals("")){
@@ -199,12 +199,13 @@ public class UserController {
             List<Account> accounts = accountService.selectAccounts(uid);
             // 开一个线程在后台定时收取邮件
             Runnable beeper = new Runnable() {
+                @Override
                 public void run() {
                     try {
                         for (Account acc: accounts) {
                             if(acc.getIsscheduled().equals("true")) {
                                 UMailReceiver receiver = UMailReceiver.newInstance(UAccountFormat.format(acc));
-                                receiver.syncWithPeriod(TokenUtil.verify(token, "uid"), Long.valueOf(acc.getScheduledperiod()) * 60 * 1000);
+                                receiver.syncWithPeriod(TokenUtil.verify(token, "uid"), Long.parseLong(acc.getScheduledperiod()) * 60 * 1000);
                             }
                         }
                     } catch (UMailException e) {

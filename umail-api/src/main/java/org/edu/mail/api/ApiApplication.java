@@ -6,14 +6,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.unit.DataSize;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.MultipartConfigElement;
 
 //(scanBasePackages="org.edu.mail.api")
-@Configuration
 @SpringBootApplication
-@EnableSwagger2
 public class ApiApplication {
 
     public static void main(String[] args) {
@@ -35,8 +34,8 @@ public class ApiApplication {
     @Bean
     public MultipartConfigElement multipartConfigElement(){
         MultipartConfigFactory factory = new MultipartConfigFactory();
-        factory.setMaxFileSize(maxFileSize);
-        factory.setMaxRequestSize(maxRequestSize);
+        factory.setMaxFileSize(DataSize.parse(maxFileSize));
+        factory.setMaxRequestSize(DataSize.parse(maxRequestSize));
         return factory.createMultipartConfig();
     }
 

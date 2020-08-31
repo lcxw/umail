@@ -6,28 +6,42 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Configuration
+@EnableSwagger2
+
 public class Swagger2Configure {
 
+	public static final Contact DEFAULT_CONTACT = new Contact(
+			"Ranga Karanam", "http://www.in28minutes.com", "in28minutes@gmail.com");
+
+	public static final ApiInfo DEFAULT_API_INFO = new ApiInfo(
+			"Awesome API Title", "Awesome API Description", "1.0",
+			"urn:tos", DEFAULT_CONTACT,
+			"Apache 2.0", "http://www.apache.org/licenses/LICENSE-2.0", Collections.emptyList());
+
+	private static final Set<String> DEFAULT_PRODUCES_AND_CONSUMES =
+			new HashSet<String>(Arrays.asList("application/json",
+					"application/xml"));
+
 	@Bean
-	public Docket createRestApi() {
+	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2)
-				.apiInfo(apiInfo())
+				.apiInfo(DEFAULT_API_INFO)
+				.produces(DEFAULT_PRODUCES_AND_CONSUMES)
+				.consumes(DEFAULT_PRODUCES_AND_CONSUMES)
 				.select()
-				.apis(RequestHandlerSelectors.basePackage("org.edu.mail.api"))
+				.apis(RequestHandlerSelectors.any())
 				.paths(PathSelectors.any())
-				.build();
-	}
-	
-	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder()
-				.title("springboot利用swagger构建api文档")
-				.description("email-system的RestfulAPI文档")
-				.termsOfServiceUrl("https://github.com/15045120/umail-api")
-				.version("1.0")
 				.build();
 	}
 }

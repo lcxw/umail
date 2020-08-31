@@ -48,7 +48,7 @@ public class AccountController{
 
     @ApiOperation(value="获取全部邮箱账号", notes="根据request头部token中uid获取全部邮箱账号")
     @RequestMapping(value = "/accounts", method = RequestMethod.GET)
-    public ResponseEntity<?> getAccount(HttpServletRequest request) {
+    public ResponseEntity<ResponseResult> getAccount(HttpServletRequest request) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");
@@ -65,9 +65,9 @@ public class AccountController{
     }
 
     @ApiOperation(value="操作邮箱账号", notes="对邮箱账号进行增删改")
-    @ApiImplicitParam(name = "account", value = "账号对象", required = true, dataType = "Account")
+    @ApiImplicitParam(name = "account", value = "账号对象", required = true, dataType = "Account",dataTypeClass =Account.class)
     @RequestMapping(value = "/accounts", method = RequestMethod.POST)
-    public ResponseEntity<?> manageAccount(HttpServletRequest request, @RequestBody Account account) {
+    public ResponseEntity<ResponseResult> manageAccount(HttpServletRequest request, @RequestBody Account account) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");
@@ -95,6 +95,7 @@ public class AccountController{
                     }else {
                         // 开一个线程在后台删除邮件
                         Runnable beeper = new Runnable() {
+                            @Override
                             public void run() {
                                 try {
                                     UMailReceiver receiver = UMailReceiver.newInstance(acc);

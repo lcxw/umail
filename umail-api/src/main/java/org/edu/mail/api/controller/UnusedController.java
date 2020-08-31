@@ -29,7 +29,7 @@ public class UnusedController {
     // 获取单个邮箱账号
     @ApiIgnore
     @RequestMapping(value = "/account", method = RequestMethod.GET)
-    public ResponseEntity<?> getAccount(HttpServletRequest request, @RequestParam String account) {
+    public ResponseEntity<ResponseResult> getAccount(HttpServletRequest request, @RequestParam String account) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");
@@ -56,7 +56,7 @@ public class UnusedController {
     // 获取邮箱列表
     @ApiIgnore
     @RequestMapping(value = "/boxes", method = RequestMethod.GET)
-    public ResponseEntity<?> getBoxes(HttpServletRequest request, @RequestParam String account) {
+    public ResponseEntity<ResponseResult> getBoxes(HttpServletRequest request, @RequestParam String account) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");
