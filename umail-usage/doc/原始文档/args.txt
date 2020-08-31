@@ -1,0 +1,247 @@
+Usage: msgshow -L imap://username:password@hostname/ -v -D -s -S -a
+
+    /* 出现中文乱码问题*/
+//                BufferedReader br = new BufferedReader(new FileReader(realFile));//构造一个BufferedReader类来读取文件
+//                StringBuffer strBuffer = new StringBuffer();
+//                String str = null;
+//                while((str = br.readLine())!=null){//使用readLine方法，一次读一行
+//                    strBuffer.append(str);
+//                }
+//                br.close();
+
+    /* 出现中文乱码问题*/
+//                InputStream is = new FileInputStream(realFile);
+//                InputStreamReader isReader = new InputStreamReader(is, "UTF-8");
+//                StringBuffer strBuffer = new StringBuffer();
+//                char[] cbuf = new char[64];
+//                int len = 0;
+//                while((len = isReader.read(cbuf))!=-1){
+//                    strBuffer.append(new String(cbuf, 0, len));
+//                }
+
+TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+            try {
+                normalSend(sourceMsg, mailType);
+            }catch(Exception e){
+                e.printStackTrace();
+                System.exit(1);
+            }
+            }
+        };
+        Timer timer = new Timer("timer-0");
+        timer.schedule(timerTask, date);
+
+
+        public void sync(){
+                TimerTask timerTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            syncFileFromServer();
+                        }catch(Exception e){
+                            e.printStackTrace();
+                            System.exit(1);
+                        }
+                    }
+                };
+                Timer timer = new Timer("timer-0");
+                timer.scheduleAtFixedRate(timerTask, new Date(), 1L*1000L);
+            }
+            // 15分钟同步一次邮件
+            public void sync0(){
+                SchedulerFactory sf = new StdSchedulerFactory();
+                Scheduler sched = null;
+                try{
+                    sched = sf.getScheduler();
+                    // 使用JobDetail中的JobDataMap携带数据
+                    Map<String, Object> dataMap = new HashMap<>();
+                    dataMap.put("receiver", this);
+                    JobDataMap jobDataMap = new JobDataMap(dataMap);
+                    // define the job and tie it to our HelloJob class
+                    JobDetail job = JobBuilder.newJob(SendJob.class)
+                            .withIdentity("receiver-job", "receiver-group")
+                            .usingJobData(jobDataMap)
+                            .build();
+
+                    // Define a Trigger that will fire "date", and not repeat
+                    Trigger trigger = TriggerBuilder.newTrigger()
+                            .withIdentity("sender-trigger", "receiver-group")
+                            .startNow()
+                            .withSchedule(CronScheduleBuilder.cronSchedule("0 */15 * * * ?"))
+                            .build();
+
+                    // Tell quartz to schedule the job using our trigger
+                    sched.scheduleJob(job, trigger);
+                    sched.start();
+        //            Thread.sleep(date.getTime()- System.currentTimeMillis());// 睡眠保证任务及时安排
+                    sched.shutdown(true);
+                }catch (SchedulerException e0){
+                    e0.printStackTrace();
+                }
+        //        catch (InterruptedException e1){
+        //            e1.printStackTrace();
+        //        }
+            }
+---------------------------------------------------------------------------------
+org.edu.mail.usage.search.LuceneSearcher
+    // 读出MessageXML文本
+    private Map<String, String> readXMLFile(Path path) throws IOException{
+        Map<String, String> msgInfo  = new HashMap<>();
+        // 从XML文件读取mail-message信息
+        SAXReader reader = new SAXReader();
+        org.dom4j.Document document = null;
+        try {
+            document = reader.read(path.toFile());
+        }catch (DocumentException e){
+            throw new IOException("读取XML文件以异常", e);
+        }
+        List<Node> list = null;
+        StringBuffer buffer = null;
+        // Date
+        msgInfo.put(DATE, document.selectSingleNode("//mail-message/message-date").getStringValue());
+        // From
+        buffer = new StringBuffer();
+        list = document.selectNodes("//mail-message/message-from");
+        for (Node node : list) {
+            buffer.append(node.getStringValue()+"  ");
+        }
+        msgInfo.put(FROM, buffer.toString());
+        // To
+        buffer = new StringBuffer();
+        list = document.selectNodes("//mail-message/message-to");
+        for (Node node : list) {
+            buffer.append(node.getStringValue()+"  ");
+        }
+        msgInfo.put(TO, buffer.toString());
+        // Subject
+        msgInfo.put(SUBJECT, document.selectSingleNode("//mail-message/message-subject").getStringValue());
+        // MsgId
+        msgInfo.put(MESSAGE_ID, document.selectSingleNode("//mail-message/message-id").getStringValue());
+        // Content
+        list = document.selectNodes("//mail-message/message-content");
+        StringBuffer contents = new StringBuffer();
+        StringBuffer attachments = new StringBuffer();
+        for (Node node : list) {
+            String content = node.getStringValue();
+            if(node.valueOf("@type").compareTo(TEXT_HTML) == 0){// 跳过
+//                contents.append(html2PlainTxt(content));
+            }else if(node.valueOf("@type").compareTo(TEXT_PLAIN) == 0){
+                contents.append(content);
+            }else {
+                attachments.append(node.valueOf("@name"));
+            }
+        }
+        msgInfo.put(CONTENT, contents.toString());
+        msgInfo.put(ATTACHMENTS, attachments.toString());
+        msgInfo.put(MESSAGE_NUM, document.selectSingleNode("//mail-message/message-num").getStringValue());
+        return msgInfo;
+    }
+    ---------------------------------------------------------------------------------
+
+    org.edu.mail.usage.UMailReceiver
+ @Deprecated
+    private void dumpEnvelopeXML(Message m, String directory, int msgnum) throws UMailException {
+        MimeMessage mm = (MimeMessage)m;
+        Address[] as = null;
+        // 创建XML文档
+        Document document = DocumentHelper.createDocument();
+        Element root = document.addElement("mail-message");
+        try {
+            // DATE
+            Date d = mm.getSentDate();
+            root.addElement(DATE).addText((d != null ? d.toString() : "UNKNOWN"));
+            // FROM
+            if ((as = mm.getFrom()) != null) {
+                for (Address a : as) {
+                    root.addElement(FROM).addText(MimeUtility.decodeText(a.toString()));
+                }
+            }
+            // TO
+            if ((as = mm.getRecipients(Message.RecipientType.TO)) != null) {
+                for (Address a : as) {
+                    root.addElement(TO).addText(MimeUtility.decodeText(a.toString()));
+                }
+            }
+            // SUBJECT
+            root.addElement(SUBJECT).addText(mm.getSubject());
+            // MESSAGE_ID
+            root.addElement(MESSAGE_ID).addText(mm.getMessageID());
+            // CONTENT
+            List<Map<String, String>> contentInfoList = new ArrayList<Map<String, String>>();
+            fetchContentFromMessage(mm, contentInfoList);
+            for (Map<String, String> contentInfoMap : contentInfoList) {
+                Element el = root.addElement(CONTENT);
+                el.addText((String) contentInfoMap.get("text"));
+                for (Map.Entry entry : contentInfoMap.entrySet()) {
+                    if (((String) entry.getKey()).compareTo("text") != 0) {
+                        el.addAttribute((String) entry.getKey(), (String) entry.getValue());
+                    }
+                }
+            }
+            // FLAGS
+            Flags flags = m.getFlags();
+            root.addElement(FLAGS).addText(flags.toString());
+            // MSG_NUM
+            root.addElement(MESSAGE_NUM).addText(Integer.toString(msgnum));
+            // 将XML文档写入文件,messagId作为文件名
+            String msgId2Base64 = Base64.getEncoder().encodeToString(mm.getMessageID().getBytes("utf-8"));
+            FileWriter out = new FileWriter(directory + msgId2Base64 + ".xml");
+            document.write(out);
+            out.close();
+        }catch(MessagingException e0){
+            throw new UMailException(e0);
+        }catch(UnsupportedEncodingException e1){
+            throw new UMailException(e1);
+        }catch(IOException e2){
+            throw new UMailException(e2);
+        }
+    }
+-------------------------------------------------------------------------------------
+//            List<HashMap<String, String>> mapList = searcher.searchAll("印象笔记", 1);
+//            for (HashMap<String, String> map : mapList) {
+//                System.out.println(map.toString());
+//
+//                UMailManager manager = UMailManager.newInstance("17370842180@189.cn", "Hh19971002");
+//                Message msg = manager.fetchOne(map.get(IndexTerm.BOX), map.get(IndexTerm.MESSAGE_ID));
+//                System.out.println(msg.getSubject());
+//            }
+
+---------------------------------------------------------------------------------------
+org.edu.mail.usage.search.LuceneSearcher
+  @Deprecated
+    private List<HashMap<String, String>> search0(Path indexPath, String queryString, int hitsPerPage) throws UMailException{
+        List<HashMap<String, String>> mapList = new ArrayList<HashMap<String, String>>();
+        try {
+            // 建立文件索引对象
+            Analyzer analyzer = new JcsegAnalyzer(JcsegTaskConfig.COMPLEX_MODE);
+            Directory directory = FSDirectory.open(indexPath);
+            IndexReader indexReader = DirectoryReader.open(directory);
+            IndexSearcher indexSearcher = new IndexSearcher(indexReader);
+            QueryParser queryParser = new QueryParser(CONTENT, analyzer);
+            Query query = queryParser.parse(queryString);
+            TopDocs topDocs = indexSearcher.search(query, 10 * hitsPerPage);
+            ScoreDoc[] scoreDocs = topDocs.scoreDocs;
+
+            for (ScoreDoc scDoc : scoreDocs) {
+                Document targetDoc = indexSearcher.doc(scDoc.doc);
+                HashMap<String, String> map = new HashMap();
+                map.put(BOX, targetDoc.get(BOX));
+                System.out.println(storagePath+"\\"+targetDoc.get(BOX)+"\\"+targetDoc.get(MESSAGE_NUM)+".json");
+                map.put(MESSAGE_ID, targetDoc.get(MESSAGE_ID));
+                map.put(MESSAGE_NUM, targetDoc.get(MESSAGE_NUM));
+                map.put(DATE, targetDoc.get(DATE));
+                map.put(FROM, targetDoc.get(FROM));
+                map.put(TO, targetDoc.get(TO));
+                map.put(SUBJECT, targetDoc.get(SUBJECT));
+                mapList.add(map);
+            }
+            indexReader.close();
+        }catch (IOException e1){
+            throw new UMailException("邮件索引搜索异常", e1);
+        }catch (ParseException e2){
+            throw new UMailException("邮件索引搜索异常", e2);
+        }
+        return mapList;
+    }

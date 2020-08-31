@@ -1,0 +1,72 @@
+IMAPStore.java
+private void authenticate(IMAPProtocol p, String authzid,
+				String user, String password)
+				throws ProtocolException {
+	// this list must match the "if" statements below
+	String defaultAuthenticationMechanisms = "PLAIN LOGIN NTLM XOAUTH2";
+
+	// setting mail.imap.auth.mechanisms controls which mechanisms will
+	// be used, and in what order they'll be considered.  only the first
+	// match is used.
+	String mechs = session.getProperty("mail." + name + ".auth.mechanisms");
+
+	if (mechs == null)
+	    mechs = defaultAuthenticationMechanisms;
+
+	/*
+	 * Loop through the list of mechanisms supplied by the user
+	 * (or defaulted) and try each in turn.  If the server supports
+	 * the mechanism and we have an authenticator for the mechanism,
+	 * and it hasn't been disabled, use it.
+	 */
+	StringTokenizer st = new StringTokenizer(mechs);
+	while (st.hasMoreTokens()) {
+	    String m = st.nextToken();
+	    m = m.toUpperCase(Locale.ENGLISH);
+
+	    /*
+	     * If using the default mechanisms, check if this one is disabled.
+	     */
+	    if (mechs == defaultAuthenticationMechanisms) {
+		String dprop = "mail." + name + ".auth." +
+				    m.toLowerCase(Locale.ENGLISH) + ".disable";
+		boolean disabled = PropUtil.getBooleanProperty(
+					session.getProperties(),
+					dprop, m.equals("XOAUTH2"));
+		if (disabled) {
+		    if (logger.isLoggable(Level.FINE))
+			logger.fine("mechanism " + m +
+					" disabled by property: " + dprop);
+		    continue;
+		}
+	    }
+
+	    if (!(p.hasCapability("AUTH=" + m) ||
+		    (m.equals("LOGIN") && p.hasCapability("AUTH-LOGIN")))) {
+		logger.log(Level.FINE, "mechanism {0} not supported by server",
+					m);
+		continue;
+	    }
+
+	    if (m.equals("PLAIN"))
+		p.authplain(authzid, user, password);
+	    else if (m.equals("LOGIN"))
+		p.authlogin(user, password);
+	    else if (m.equals("NTLM"))
+		p.authntlm(authzid, user, password);
+	    else if (m.equals("XOAUTH2"))
+		p.authoauth2(user, password);
+	    else {
+		logger.log(Level.FINE, "no authenticator for mechanism {0}", m);
+		continue;
+	    }
+	    return;
+	}
+
+	if (!p.hasCapability("LOGINDISABLED")) {
+	    p.login(user, password);
+	    return;
+	}
+
+	throw new ProtocolException("No login methods supported!");
+    }

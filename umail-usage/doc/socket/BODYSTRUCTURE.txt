@@ -1,0 +1,16 @@
+* 11 FETCH (BODYSTRUCTURE
+(
+("text" "html" ("CHARSET" "utf-8") NIL NIL "base64" 9484 122 NIL NIL NIL)
+"mixed"
+("BOUNDARY" "----=_Part_100352434_408072034.1553505102551") NIL NIL)
+)
+
+
+type = "application";
+subtype = "octet-stream";
+cParams = parseParameters(r);
+id = r.readString();
+description = r.readString();
+encoding = r.readAtomString();
+size = r.readNumber();
+lines = r.readNumber();
