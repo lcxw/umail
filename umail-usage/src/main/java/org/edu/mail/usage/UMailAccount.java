@@ -33,7 +33,8 @@ public class UMailAccount {
     private String sendHost;
     private int sendPort;
     private boolean sendIsSSL;
-
+//System.getProperty("user.home") + File.separator +
+    // todo save file to user home
     private static final String WINDOW_CONF_FILE_NAME = "d://umail//conf//ServerConf.xml";
     private static final String UNIX_CONF_FILE_NAME = "/usr/myprogram/umail/conf/ServerConf.xml";
 
@@ -125,15 +126,9 @@ public class UMailAccount {
         Document document = null;
         try {
             InputStream is = ClassLoader.getSystemResourceAsStream("conf/ServerConf.xml");
-            if(UMailUtils.isWindowEnv()){
                 if(is == null) {
-                    is = new FileInputStream(new File(WINDOW_CONF_FILE_NAME));
+                    is = new FileInputStream(new File(UMailUtils.getServerConfig().toString()));
                 }
-            }else{
-                if(is == null) {
-                    is = new FileInputStream(new File(UNIX_CONF_FILE_NAME));
-                }
-            }
             document = reader.read(is);
         }catch (DocumentException e){
             e.printStackTrace();

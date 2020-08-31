@@ -140,7 +140,7 @@ public class MessageController extends UMailConfigure{
     }
 
     @ApiOperation(value="发送邮件", notes="发送邮件")
-    @ApiImplicitParam(name = "raw", value = "邮件原始json字符串", required = true, dataType = "String")
+//    @ApiImplicitParam(name = "raw", value = "邮件原始json字符串", required = true, dataType = "String")
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     public ResponseEntity<ResponseResult> sendMessages(HttpServletRequest request, @RequestBody String raw) {
         ResponseResult result = new ResponseResult();
@@ -178,7 +178,7 @@ public class MessageController extends UMailConfigure{
     }
 
     @ApiOperation(value="同步邮件", notes="对指定邮箱账号进行同步")
-    @ApiImplicitParam(name = "account", value = "邮箱账号名", required = true, dataType = "String")
+//    @ApiImplicitParam(name = "account", value = "邮箱账号名", required = true, dataType = "String")
     @RequestMapping(value = "/sync", method = RequestMethod.GET)
     public ResponseEntity<ResponseResult> syncMessages(HttpServletRequest request, @RequestParam String account) {
         ResponseResult result = new ResponseResult();

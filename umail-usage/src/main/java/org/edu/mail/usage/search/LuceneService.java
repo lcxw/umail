@@ -1,7 +1,9 @@
 package org.edu.mail.usage.search;
 
 import org.edu.mail.usage.UMailConfigure;
+import org.edu.mail.usage.util.UMailUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,15 +22,18 @@ public abstract class LuceneService extends UMailConfigure {
     // 邮件索引路径
     Path indexPath;
 
-    LuceneService(String uid, String account){
+    LuceneService(String uid, String account) {
         this.account = account;
-        storagePath = Paths.get(conf.getProperty("storage.directory")+uid+separator+account);
-        indexPath = Paths.get(conf.getProperty("index.directory")+uid+separator+account);
+        storagePath = Paths.get(UMailUtils.getConfigBase().toString(), conf.getProperty("storage.directory"), uid, account);
+        indexPath = Paths.get(UMailUtils.getConfigBase().toString(), conf.getProperty("index.directory"), uid, account);
         try {
             if (!Files.exists(indexPath)) {
                 indexPath = Files.createDirectories(indexPath);
             }
-        }catch (IOException e){
+            if (!Files.exists(storagePath)) {
+                storagePath = Files.createDirectories(storagePath);
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

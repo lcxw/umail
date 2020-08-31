@@ -11,6 +11,7 @@ import org.edu.mail.usage.job.ReceiveJob;
 import org.edu.mail.usage.search.LuceneIndexer;
 import org.edu.mail.usage.search.UMailFileReader;
 import org.edu.mail.usage.util.UMailUtils;
+import org.openjsse.sun.security.ssl.SSLLogger;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -22,6 +23,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.edu.mail.usage.UMailFolder.RECEIVE_BOX;
 import static org.edu.mail.usage.UMessageContentType.*;
@@ -152,11 +155,10 @@ public class UMailReceiver extends UMailService {
     }
 
     // path不存在时建立Folder
-    void buildFolder(String path) throws IOException {
+    void buildFolder(Path path) throws IOException {
         logger.info("创建本地存储邮箱目录：" + path);
-        if (!Files.exists(Paths.get(path))) {
-            Files.createDirectories(Paths.get(path));
-            return;
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
         }
     }
 
@@ -176,17 +178,23 @@ public class UMailReceiver extends UMailService {
             // pop协议获取邮箱的目录问题
             if (uaccount.getRecProtocol().startsWith("imap")) {
                 // 获取默认根目录
-                for (Object o : UMailFolder.toValueList()) {
-                    buildFolder(storagePath + o);
+                for (String o : UMailFolder.toValueList()) {
+                    buildFolder(Paths.get(storagePath, o.toString()));
                 }
-                for (Object o : UMailFolder.toValueList()) {
+                for (String o : UMailFolder.toValueList()) {
 //                    buildFolder(storagePath+o);
                     // 获取邮件Id列表
 
                     String[] msgIds = umailFileReader.listMessageUids((String) o);
                     List msgIdList = Arrays.asList(msgIds);
                     Folder f = store.getFolder((String) o);
-                    f.open(Folder.READ_ONLY);
+                    try {
+                        f.open(Folder.READ_ONLY);
+
+                    } catch (FolderNotFoundException exception) {
+                        logger.log(Level.FINER, "文件夹未找到", exception.getCause());
+                        continue;
+                    }
                     Message[] msgs = f.getMessages();
                     String muid = UUID.randomUUID().toString();
                     for (Message msg : msgs) {
@@ -196,8 +204,9 @@ public class UMailReceiver extends UMailService {
                             muid = Long.toString(((IMAPFolder) f).getUID(msg));
                         }
                         // 对于已下载的邮件跳过
-//                        if (!msgIdList.contains(muid)) {
-                        if (muid.equals("1573916857")||muid.equals("1581179388")) {
+                        //todo 这里记得删除
+                        if (!msgIdList.contains(muid)) {
+//                        if (muid.equals("1573916857") || muid.equals("1581179388")) {
                             dumpEnvelopeJSON(msg, f);
                         } else {
                             logger.info(muid + "====已经同步====");
@@ -208,16 +217,16 @@ public class UMailReceiver extends UMailService {
 
             } else {
                 // pop协议时直接获取INBOX目录
-                for (Object o : UMailFolder.toValueList()) {
-                    buildFolder(storagePath + o);
+                for (String o : UMailFolder.toValueList()) {
+                    buildFolder(Paths.get(storagePath, o));
                 }
-                for (Object o : UMailFolder.toValueList()) {
+                for (String o : UMailFolder.toValueList()) {
 //                    buildFolder(storagePath+o);
                     if (o.equals(UMailFolder.RECEIVE_BOX.getValue())) {
                         // 获取邮件Id列表
                         String[] msgIds = umailFileReader.listMessageUids(UMailFolder.RECEIVE_BOX.getValue());
-                        List msgIdList = Arrays.asList(msgIds);
-                        Folder f = store.getFolder((String) o);
+                        List<String> msgIdList = Arrays.asList(msgIds);
+                        Folder f = store.getFolder(o);
                         f.open(Folder.READ_ONLY);
                         Message[] msgs = f.getMessages();
                         String muid = UUID.randomUUID().toString();
@@ -312,10 +321,11 @@ public class UMailReceiver extends UMailService {
     }
 
     public void doSync(String uid) throws UMailException {
-        storagePath = conf.getProperty("storage.directory") + uid + separator + uaccount.getAccount() + separator;
+//        storagePath = UMailUtils.getConfigBase()+File.separator+conf.getProperty("storage.directory") + uid + separator + uaccount.getAccount() + separator;
+        storagePath = Paths.get(UMailUtils.getConfigBase().toString(), conf.getProperty("storage.directory"), uid, uaccount.getAccount()).toString();
         // 同步邮件至本地
         try {
-            buildFolder(storagePath);
+            buildFolder(Paths.get(storagePath));
         } catch (IOException e) {
             throw new UMailException("创建本地邮件存储目录失败", e);
         }
@@ -328,7 +338,7 @@ public class UMailReceiver extends UMailService {
     }
 
     private void dumpEnvelopeJSON(Message m, Folder folder) throws UMailException {
-        String directory = storagePath + (folder.getName() == null ? folder.getFullName() : folder.getName()) + separator;
+        Path directory = Paths.get(storagePath ,(folder.getName() == null ? folder.getFullName() : folder.getName()));
         MimeMessage mm = (MimeMessage) m;
         Address[] as = null;
         Map<String, Object> map = new HashMap<>();
@@ -337,14 +347,14 @@ public class UMailReceiver extends UMailService {
             logger.info("收取<" + uaccount.getAccount() + ">邮件：" + m.getSubject());
             // messageID为空的直接返回
             if (mm.getMessageID() == null) {
-                logger.info(mm.getContentMD5()+"的邮件由于没有message-id被跳过了");
+                logger.info(mm.getContentMD5() + "的邮件由于没有message-id被跳过了");
                 return;
             }
             // MESSAGE_ID
             map.put(MESSAGE_ID, mm.getMessageID());
             // DATE
             Date d = mm.getSentDate();
-            if(d==null){
+            if (d == null) {
                 logger.info(mm.getReceivedDate().toString());
             }
             // 格式化方面后面lucene索引使用Range Search查询
@@ -434,7 +444,7 @@ public class UMailReceiver extends UMailService {
             }
             map.put(MESSAGE_UID, muid);
             // 将JSON文档写入文件,uid作为文件名
-            File file = new File(directory + muid + ".json");
+            File file = new File(directory.resolve( muid + ".json").toString());
             if (!file.exists()) {
                 file.getParentFile().mkdirs();
                 file.createNewFile();

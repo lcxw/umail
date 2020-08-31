@@ -7,6 +7,7 @@ import java.util.List;
  * 通用邮件文件夹
  */
 public enum UMailFolder {
+    //xx
     RECEIVE_BOX("收件箱", "INBOX"),
     DRAFT_BOX("草稿箱", "草稿箱"),
     SENT_BOX("已发送", "已发送"),
@@ -27,14 +28,14 @@ public enum UMailFolder {
     public String getValue(){
         return this.value;
     }
-    public static List toLabelList() {
+    public static List<String> toLabelList() {
         List<String> list = new ArrayList<>();
         for (UMailFolder f: values()){
             list.add(f.label);
         }
         return list;
     }
-    public static List toValueList() {
+    public static List<String> toValueList() {
         List<String> list = new ArrayList<>();
         for (UMailFolder f: values()){
             list.add(f.value);

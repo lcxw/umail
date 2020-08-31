@@ -90,7 +90,7 @@ public class UMailFileReader extends LuceneService {
         for(String str: root.list()){
             list.add(str.substring(0, str.indexOf(".json")));
         }
-        return list.toArray(new String[list.size()]);
+        return list.toArray(new String[0]);
     }
 
     public static final String REPLY = "回复";
