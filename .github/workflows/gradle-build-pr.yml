@@ -47,8 +47,8 @@ jobs:
           path: |
             umail-api/build/libs/
             umail-usage/build/libs/
-            doc/screenshots/
-            doc/*/md
+            doc/**/*.png
+            doc/*.md
   yarn:
 
     runs-on: ubuntu-latest
