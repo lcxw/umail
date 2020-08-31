@@ -8,16 +8,14 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@master
+      - uses: actions/setup-java@master
         with:
           java-version: 11
-#      - uses: eskatos/gradle-command-action@v1
-#        with:
-#          wrapper-directory: path/to/wrapper-directory
       - uses: eskatos/gradle-command-action@v1
         with:
             arguments: build
+            wrapper-directory: gradle/wrapper
       - uses: example/action-that-comments-on-the-pr@v0
         if: failure()
         with:
@@ -25,3 +23,38 @@ jobs:
       - uses: eskatos/gradle-command-action@v1
         env:
           CI: true
+      - name: build with gradle
+        run: |
+        gradle clean
+        gradle build
+      - uses: actions/upload-artifact@master
+        with:
+          name: umail-usage
+          path: umail-web/umail-usage/build/libs/
+      - uses: actions/upload-artifact@master
+        with:
+          name: umail-usage
+          path: umail-web/umail-api/build/libs/
+  yarn:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: |
+        cd umail-web
+        yarn
+        yarn build
+      - uses: actions/upload-artifact@master
+        with:
+          name: umail-web
+          path: umail-web/dist/

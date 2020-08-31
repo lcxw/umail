@@ -14,8 +14,8 @@ import java.util.logging.Logger;
  */
 
 public abstract class UMailConfigure {
-    private static final String WINDOW_CONF_FILE_NAME = "d:\\umail\\conf\\window.conf.properties";
-    private static final String UNIX_CONF_FILE_NAME = "/usr/myprogram/umail/conf/unix.conf.properties";
+//    private static final String WINDOW_CONF_FILE_NAME = "d:\\umail\\conf\\window.conf.properties";
+//    private static final String UNIX_CONF_FILE_NAME = "/usr/myprogram/umail/conf/unix.conf.properties";
     // 配置
     protected Properties conf = new Properties();
     // 路径分隔符
@@ -27,13 +27,18 @@ public abstract class UMailConfigure {
             InputStream is = null;
             // 首先判断时window还是unix系统，加载不同的配置文件
             log.info("当前操作环境:" + System.getProperty("os.name"));
-            log.info("预加载配置文件：conf/conf.properties");
+//            log.info("预加载配置文件：conf/conf.properties");
+            log.info(String.format("预加载配置文件：%s", UMailUtils.getServerConfig().toString()));
+            is = new FileInputStream(new File(UMailUtils.getServerConfig().toString()));
+            log.info("加载配置文件：" + new File(UMailUtils.getServerConfig().toString()).getAbsolutePath());
             // 使用绝对路径解决ClassLoader.getSystemResourceAsStream($fileName)在WEB容器中就报NULL错误
-            is = ClassLoader.getSystemResourceAsStream("conf" + separator + "conf.properties");
-            if (is == null) {
-                is = new FileInputStream(new File(UMailUtils.getServerConfig().toString()));
-                log.info("加载配置文件：" + new File(UMailUtils.getServerConfig().toString()).getAbsolutePath());
-            }
+            // todo 这里直接使用home目录下的了，虽然这样是可以拿到配置文件的
+
+//            is = ClassLoader.getSystemResourceAsStream("conf" + separator + "conf.properties");
+//            if (is == null) {
+//                is = new FileInputStream(new File(UMailUtils.getServerConfig().toString()));
+//                log.info("加载配置文件：" + new File(UMailUtils.getServerConfig().toString()).getAbsolutePath());
+//            }
             conf.load(is);
         } catch (IOException e) {
             e.printStackTrace();
