@@ -30,21 +30,21 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -s
 
-#      - uses: eskatos/gradle-command-action@v1
-#        env:
-#          CI: true
-#        with:
-#            arguments: build
-#      - name: build with gradle
-#        run: |
-#          gradle clean
-#          gradle build
+      #      - uses: eskatos/gradle-command-action@v1
+      #        env:
+      #          CI: true
+      #        with:
+      #            arguments: build
+      #      - name: build with gradle
+      #        run: |
+      #          gradle clean
+      #          gradle build
       - uses: actions/upload-artifact@v2
         with:
-          name: umail-usage
+          name: umail-usage ${{ matrix.java-version }}
           path: |
-            umail-web/umail-api/build/libs/
-            umail-web/umail-usage/build/libs/
+            umail-api/build/libs/
+            umail-usage/build/libs/
             doc/screenshots/
             doc/*/md
   yarn:
@@ -68,6 +68,6 @@ jobs:
           yarn build
       - uses: actions/upload-artifact@v2
         with:
-          name: umail-web
+          name: umail-web ${{ matrix.node-version }}
           path: |
             umail-web/dist/
