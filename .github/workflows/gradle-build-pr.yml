@@ -16,10 +16,6 @@ jobs:
         with:
             arguments: build
             wrapper-directory: gradle/wrapper
-      - uses: example/action-that-comments-on-the-pr@master
-        if: failure()
-        with:
-          comment: Build failed ${{ steps.gradle.outputs.build-scan-url }}
       - uses: eskatos/gradle-command-action@v1
         env:
           CI: true
