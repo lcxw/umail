@@ -53,7 +53,8 @@ jobs:
           cd umail-web
           yarn
           yarn build
-      - uses: actions/upload-artifact@master
+      - uses: actions/upload-artifact@v2
         with:
           name: umail-web
-          path: umail-web/dist/
+          path: |
+            umail-web/dist/
