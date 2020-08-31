@@ -72,7 +72,7 @@ dependencies {
     // fastjson
     implementation 'com.alibaba:fastjson:1.2.55'
     // 二维码扫描
-    implementation 'com.google.zxing:core:3.3.3'
+//    implementation 'com.google.zxing:core:3.3.3'
     // Json Web Token用于用户登录验证
     implementation 'com.auth0:java-jwt:3.7.0'
     // 解析html,用户提取文本
