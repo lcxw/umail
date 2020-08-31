@@ -4,14 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.pop3.POP3Folder;
-import com.sun.mail.util.BASE64DecoderStream;
 import org.apache.commons.lang3.StringUtils;
-import org.edu.mail.usage.*;
 import org.edu.mail.usage.job.ReceiveJob;
 import org.edu.mail.usage.search.LuceneIndexer;
 import org.edu.mail.usage.search.UMailFileReader;
 import org.edu.mail.usage.util.UMailUtils;
-import org.openjsse.sun.security.ssl.SSLLogger;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -24,9 +21,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import static org.edu.mail.usage.UMailFolder.RECEIVE_BOX;
 import static org.edu.mail.usage.UMessageContentType.*;
 import static org.edu.mail.usage.search.IndexTerm.*;
 
@@ -63,8 +58,10 @@ public class UMailReceiver extends UMailService {
     private void extractContent(Part m) throws UMailException {
         Map<String, String> map;
         try {
-//            if (m.isMimeType(TEXT_STAR)) {// 最外层邮件内容类型：文本类型
-            if (m.isMimeType(TEXT_PLAIN) || m.isMimeType(TEXT_HTML)) {// 最外层邮件内容类型：文本类型
+//            if (m.isMimeType(TEXT_STAR)) {
+// 最外层邮件内容类型：文本类型
+            if (m.isMimeType(TEXT_PLAIN) || m.isMimeType(TEXT_HTML)) {
+                // 最外层邮件内容类型：文本类型
                 map = new HashMap<>();
                 // 文本
                 String contentType = m.getContentType();
