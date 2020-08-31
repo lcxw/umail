@@ -62,7 +62,8 @@ public class UMailSender extends UMailService{
                 multipart.addBodyPart(bodyPart);
                 // 压缩源邮件成zip并加密
                 Message srcMessage = sourceMsg.toMimeMessage(session);
-                String tempDir = conf.getProperty("temp.directory") + separator+"Temp-" + System.currentTimeMillis() +separator;
+                String tempDir = Paths.get(UMailUtils.getConfigBase().toString(), conf.getProperty("temp.directory"), "Temp-" + System.currentTimeMillis()).toString();
+
                 if(!Files.exists(Paths.get(tempDir))){
                     Files.createDirectories(Paths.get(tempDir));
                 }
@@ -179,7 +180,7 @@ public class UMailSender extends UMailService{
         List<File> fileList = new ArrayList<>();
         for (Object attach:attachments){
             JSONObject attachment = (JSONObject)attach;
-            String realPath = conf.getProperty("attach.directory")+UMailUtils.decode64((String)attachment.get("path"));
+            String realPath = Paths.get(UMailUtils.getConfigBase().toString(), conf.getProperty("attach.directory"),UMailUtils.decode64((String)attachment.get("path"))).toString();
             fileList.add(new File(realPath));
         }
         sourceMsg.setAttachments(fileList.toArray(new File[fileList.size()]));

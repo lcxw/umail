@@ -129,7 +129,7 @@ public class UMailReceiver extends UMailService {
                     }
                     // 输出附件
                     String tempDir = "Temp-" + System.currentTimeMillis() + separator;
-                    String savePath = conf.getProperty("attach.directory") + tempDir;
+                    String savePath = Paths.get(UMailUtils.getConfigBase().toString(), conf.getProperty("attach.directory") , tempDir).toString();
                     if (!Files.exists(Paths.get(savePath))) {
                         Files.createDirectories(Paths.get(savePath));
                     }
