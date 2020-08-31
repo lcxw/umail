@@ -24,7 +24,7 @@ jobs:
         env:
           CI: true
       - name: build with gradle
-          run: |
+        run: |
           gradle clean
           gradle build
       - uses: actions/upload-artifact@master
