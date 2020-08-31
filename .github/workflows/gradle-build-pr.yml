@@ -15,9 +15,9 @@ jobs:
       - uses: eskatos/gradle-command-action@v1
         env:
           CI: true
-        with:
-            arguments: build
-      - name: build with gradle
+#        with:
+#            arguments: build
+       - name: build with gradle
         run: |
           gradle clean
           gradle build
