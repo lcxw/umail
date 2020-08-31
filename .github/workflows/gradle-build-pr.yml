@@ -24,9 +24,9 @@ jobs:
         env:
           CI: true
       - name: build with gradle
-        run: |
-        gradle clean
-        gradle build
+          run: |
+          gradle clean
+          gradle build
       - uses: actions/upload-artifact@master
         with:
           name: umail-usage
@@ -51,9 +51,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: |
-        cd umail-web
-        yarn
-        yarn build
+          cd umail-web
+          yarn
+          yarn build
       - uses: actions/upload-artifact@master
         with:
           name: umail-web
