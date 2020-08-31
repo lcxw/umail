@@ -22,6 +22,7 @@ import org.lionsoul.jcseg.tokenizer.core.JcsegTaskConfig;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -215,7 +216,8 @@ public class LuceneSearcher extends LuceneService{
 
             for (ScoreDoc scDoc : scoreDocs) {
                 Document targetDoc = indexSearcher.doc(scDoc.doc);
-                String file = storagePath+separator+targetDoc.get(BOX)+separator+targetDoc.get(MESSAGE_UID)+".json";
+                String file =
+                        Paths.get(storagePath.toString(),targetDoc.get(BOX),targetDoc.get(MESSAGE_UID)+".json").toString();
                 Object json = JSONObject.parse(UMailUtils.file2Str(new File(file), "utf-8"));
                 list.add(json);
                 logger.info("共搜索到"+list.size()+"封邮件");

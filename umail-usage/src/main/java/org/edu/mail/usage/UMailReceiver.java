@@ -432,7 +432,7 @@ public class UMailReceiver extends UMailService {
             Flags flags = m.getFlags();
             map.put(FLAGS, flags.toString());
             // BOX
-            map.put(BOX, folder.getName());
+            map.put(BOX, folder.getName()==null?folder.getFullName():folder.getName());
             // NEW
             map.put(NEW, true);
             // MESSAGE_UID

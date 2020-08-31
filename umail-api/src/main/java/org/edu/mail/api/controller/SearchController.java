@@ -3,6 +3,7 @@ package org.edu.mail.api.controller;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.edu.mail.api.util.ResponseResult;
 import org.edu.mail.api.util.TokenUtil;
 import org.edu.mail.usage.UMailException;
@@ -25,9 +26,10 @@ import static org.edu.mail.api.util.ResponseMessage.UN_AUTHORIZED;
 
 @RestController
 @RequestMapping(value = "/api")
+@Slf4j
 public class SearchController {
 
-    @ApiOperation(value="搜索往来邮件", notes="搜索并返回查询到的邮件")
+    @ApiOperation(value = "搜索往来邮件", notes = "搜索并返回查询到的邮件")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "account", value = "邮箱所属账户", required = true, dataType = "String"),
             @ApiImplicitParam(name = "origin", value = "查询项", required = true, dataType = "String"),
@@ -35,33 +37,34 @@ public class SearchController {
     })
     @RequestMapping(value = "/search0", method = RequestMethod.GET)
     public ResponseEntity<ResponseResult> searchMsgByAddress(HttpServletRequest request,
-                                                @RequestParam String account,
-                                                @RequestParam String origin,
-                                                @RequestParam String queryKey) {
+                                                             @RequestParam String account,
+                                                             @RequestParam String origin,
+                                                             @RequestParam String queryKey) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");
-        if(uid == null){
+        if (uid == null) {
             result.setCode(UN_AUTHORIZED_CODE);
             result.setMessage(UN_AUTHORIZED);
-        }else{
+        } else {
             try {
                 LuceneSearcher searcher = LuceneSearcher.newInstance(uid, account);
                 LuceneSearcher.Builder builder = LuceneSearcher.newInstance(uid, account).create();
-                if(origin.equals(IndexTerm.FROM)){
+                if (origin.equals(IndexTerm.FROM)) {
                     builder.withFrom(queryKey);
-                }else if(origin.equals(IndexTerm.TO)){
+                } else if (origin.equals(IndexTerm.TO)) {
                     builder.withTo(queryKey);
-                }else if(origin.equals(IndexTerm.SUBJECT)){
+                } else if (origin.equals(IndexTerm.SUBJECT)) {
                     builder.withSubject(queryKey);
-                }else if(origin.equals(IndexTerm.ATTACHMENTS)){
+                } else if (origin.equals(IndexTerm.ATTACHMENTS)) {
                     builder.withAttachment(queryKey);
                 }
                 Object[] res = builder.search(1);
                 result.setCode(OK_CODE);
                 result.setMessage(QUERY_OK);
                 result.setData(res);
-            }catch (UMailException e) {
+            } catch (UMailException e) {
+                log.error("邮件搜索失败", e);
                 result.setCode(MAIL_MANAGER_FAIL_CODE);
                 result.setMessage(QUERY_NOT_EXIST);
                 result.setData(e);
@@ -70,29 +73,29 @@ public class SearchController {
         return ResponseEntity.ok().body(result);
     }
 
-    @ApiOperation(value="全文搜索邮件", notes="全文搜索并返回查询到的邮件")
+    @ApiOperation(value = "全文搜索邮件", notes = "全文搜索并返回查询到的邮件")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "account", value = "邮箱所属账户", required = true, dataType = "String"),
             @ApiImplicitParam(name = "queryKey", value = "查询关键词", required = true, dataType = "String")
     })
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public ResponseEntity<ResponseResult> search(HttpServletRequest request,
-                                    @RequestParam String account,
-                                    @RequestParam String queryKey) {
+                                                 @RequestParam String account,
+                                                 @RequestParam String queryKey) {
         ResponseResult result = new ResponseResult();
         String token = request.getHeader("token");
         String uid = TokenUtil.verify(token, "uid");
-        if(uid == null){
+        if (uid == null) {
             result.setCode(UN_AUTHORIZED_CODE);
             result.setMessage(UN_AUTHORIZED);
-        }else{
+        } else {
             try {
                 LuceneSearcher searcher = LuceneSearcher.newInstance(uid, account);
                 Object[] res = searcher.searchAll(queryKey, 1);
                 result.setCode(OK_CODE);
                 result.setMessage(QUERY_OK);
                 result.setData(res);
-            }catch (UMailException e) {
+            } catch (UMailException e) {
                 result.setCode(MAIL_MANAGER_FAIL_CODE);
                 result.setMessage(QUERY_NOT_EXIST);
                 result.setData(e);
