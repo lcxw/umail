@@ -28,9 +28,13 @@ jobs:
           gradle build
       - uses: actions/upload-artifact@v2
         with:
+          title: my-artifacts
+            - files: [ path/to/artifact.tar.gz ]
+            - name: "Packages"
+              files: [ umail-web/umail-api/build/libs/,  umail-web/umail-usage/build/libs/ ]
+            - name: "Docs"
+              files: [ "README.md", doc/screenshots/, doc/*/md ]
           name: umail-usage
-          - path: umail-web/umail-api/build/libs/
-          - path: umail-web/umail-usage/build/libs/
   yarn:
 
     runs-on: ubuntu-latest
