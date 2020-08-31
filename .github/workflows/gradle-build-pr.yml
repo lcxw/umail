@@ -17,7 +17,7 @@ jobs:
           CI: true
 #        with:
 #            arguments: build
-       - name: build with gradle
+      - name: build with gradle
         run: |
           gradle clean
           gradle build
