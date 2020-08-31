@@ -16,7 +16,7 @@ jobs:
         with:
             arguments: build
             wrapper-directory: gradle/wrapper
-      - uses: example/action-that-comments-on-the-pr@v0
+      - uses: example/action-that-comments-on-the-pr@master
         if: failure()
         with:
           comment: Build failed ${{ steps.gradle.outputs.build-scan-url }}
